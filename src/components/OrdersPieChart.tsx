@@ -16,9 +16,11 @@ const OrdersPieChart = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [chartData, setChartData] = useState<any[][]>([]);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const getOrders = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/order/");
+      const { data } = await axios.get(`${apiUrl}/order/`);
       setOrders(data);
       transformDataForChart(data);
     } catch (err) {

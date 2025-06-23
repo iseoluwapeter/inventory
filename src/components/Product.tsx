@@ -38,9 +38,12 @@ const Product = () => {
   const [selectedSupplier, setSelectedSupplier] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+
   const getProducts = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/product");
+      const { data } = await axios.get(`${apiUrl}/product`);
       setProducts(data);
       console.log(data);
     } catch (error) {
@@ -50,7 +53,7 @@ const Product = () => {
 
   const getCategory = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/category");
+      const { data } = await axios.get(`${apiUrl}/category`);
       setCategory(data);
     } catch (error) {
       console.log(error);
@@ -59,7 +62,7 @@ const Product = () => {
 
   const getSuppliers = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/supplier/");
+      const { data } = await axios.get(`${apiUrl}/supplier/`);
       setSupplier(data);
     } catch (error) {
       console.log(error);
@@ -83,7 +86,7 @@ const Product = () => {
       category_id: selectedCategory,
     };
     try {
-      await axios.post("http://127.0.0.1:8000/product/product", payload);
+      await axios.post(`${apiUrl}/product/product`, payload);
       toast.success("product successfully added");
       setAddForm(false);
       getProducts();

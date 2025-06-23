@@ -40,6 +40,8 @@ const Suppliers = () => {
     null
   );
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const handleDeleteClick = (supplier: suppliers) => {
     setDeleteingSupplierId(Number(supplier.id));
     setDeleteFormVisible(true);
@@ -48,7 +50,7 @@ const Suppliers = () => {
   const confirmDeletingSupplier = async () => {
     try {
       const res = await axios.delete(
-        `http://127.0.0.1:8000/supplier/supplier/${deletingSupplierId}`
+        `${apiUrl}/supplier/supplier/${deletingSupplierId}`
       );
       setDeleteFormVisible(false);
       setDeleteingSupplierId(null);
@@ -77,7 +79,7 @@ const Suppliers = () => {
     
     try {
       await axios.put(
-        `http://127.0.0.1:8000/supplier/supplier/${editingSupplierId}`,
+        `${apiUrl}/supplier/supplier/${editingSupplierId}`,
         editingSupplier
       );
       toast.success("Supplier successfully updated!");
@@ -92,7 +94,7 @@ const Suppliers = () => {
 
   const getSuppliers = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/supplier/");
+      const { data } = await axios.get(`${apiUrl}/supplier/`);
       setSuppliers(data);
     } catch (error) {
       console.log(error);
@@ -116,7 +118,7 @@ const Suppliers = () => {
       return;
     }
     try {
-      await axios.post("http://127.0.0.1:8000/supplier/supplier", newSupplier);
+      await axios.post(`${apiUrl}/supplier/supplier`, newSupplier);
       setNewSupplier({
         name: "",
         address: "",

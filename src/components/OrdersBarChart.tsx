@@ -28,12 +28,11 @@ const COLORS = [
 
 const OrderBarChart = () => {
   const [chartData, setChartData] = useState<any[][]>([]);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const fetchCustomerData = async () => {
     try {
-      const { data } = await axios.get(
-        "http://127.0.0.1:8000/orders-by-customers"
-      );
+      const { data } = await axios.get(`${apiUrl}/orders-by-customers`);
 
       const formatted = [
         ["Customer", "Orders", { role: "style" }],
@@ -86,6 +85,5 @@ const OrderBarChart = () => {
     </div>
   );
 };
-
 
 export default OrderBarChart;

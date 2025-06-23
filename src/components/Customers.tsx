@@ -22,11 +22,14 @@ const Customers = () => {
   const [phone, setPhone] = useState<string>("");
   const [address, setAddress] = useState<string>("");
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+
   const { staff } = useStaff();
 
   const getCustomers = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/customer");
+      const { data } = await axios.get(`${apiUrl}/customer`);
       setCustomers(data);
       console.log(data);
     } catch (error) {
@@ -49,7 +52,7 @@ const Customers = () => {
       staff_id: staff.id,
     };
     try {
-      await axios.post("http://127.0.0.1:8000/customer/customer", payload);
+      await axios.post(`${apiUrl}/customer/customer`, payload);
       toast.success("Customer successfully added");
       setAddForm(false);
       getCustomers();

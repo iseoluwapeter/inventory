@@ -1,5 +1,5 @@
 import CustomerHistogram from "../components/CustomerHistogram";
-import OrdersBarChart from "../components/OrdersBarChart";
+// import OrdersBarChart from "../components/OrdersBarChart";
 import OrdersPieChart from "../components/OrdersPieChart";
 
 const Home = () => {
@@ -7,7 +7,7 @@ const Home = () => {
     <div>
       <div className="flex">
         <div className="w-full grid grid-cols-2 gap-5">
-          <OrdersBarChart />
+          {/* <OrdersBarChart /> */}
           <OrdersPieChart />
           <CustomerHistogram/>
         </div>

@@ -68,6 +68,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("adminId");
+    localStorage.removeItem("staff")
     navigate("/login", { replace: true });
   };
 

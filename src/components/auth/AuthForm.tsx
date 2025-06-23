@@ -4,10 +4,13 @@ import LoginImage from "../../assets/login.jpeg";
 
 type Field = {
   name: string;
-  type: string;
+  type: string; // "text", "email", "password", or "select"
   placeholder: string;
   value: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
+  options?: { id: number; label: string; value: string }[]; // for select fields
 };
 
 type FooterText = {
@@ -24,6 +27,7 @@ type AuthFormProps = {
   buttonText: string;
   footerText: FooterText;
 };
+
 const AuthForm = ({
   title,
   fields,
@@ -48,10 +52,7 @@ const AuthForm = ({
 
       {/* Content on top of overlay */}
       <div className="relative z-20 flex items-center justify-center h-full p-5">
-        <div
-
-          className="bg-white/20 backdrop-blur-md shadow-lg rounded-xl px-8 py-10 w-full max-w-md text-white"
-        >
+        <div className="bg-white/20 backdrop-blur-md shadow-lg rounded-xl px-8 py-10 w-full max-w-md text-white">
           <h1 className="text-4xl font-bold mb-8 text-center">{title}</h1>
 
           <form
@@ -61,16 +62,39 @@ const AuthForm = ({
             }}
             className="flex flex-col space-y-4"
           >
-            {fields.map((field) => (
-              <input
-                key={field.name}
-                type={field.type}
-                placeholder={field.placeholder}
-                value={field.value}
-                onChange={field.onChange}
-                className="px-4 py-2 rounded-md bg-white/30 text-white placeholder-white/70 outline-none focus:ring-2 focus:ring-orange-400"
-              />
-            ))}
+            {fields.map((field) =>
+              field.type === "select" ? (
+                <select
+                  key={field.name}
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  className="px-4 py-2 rounded-md bg-white/30 text-white placeholder-white/70 outline-none focus:ring-2 focus:ring-orange-400"
+                  required
+                >
+                  <option value="" disabled>
+                    {field.placeholder || "Select an option"}
+                  </option>
+                  {field.options?.map((opt, idx) => (
+                    <option key={`${opt.id}-${idx}`} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  key={field.name}
+                  name={field.name}
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  value={field.value}
+                  onChange={field.onChange}
+                  className="px-4 py-2 rounded-md bg-white/30 text-white placeholder-white/70 outline-none focus:ring-2 focus:ring-orange-400"
+                  required
+                />
+              )
+            )}
+
             <button
               type="submit"
               className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 rounded-md transition-all"

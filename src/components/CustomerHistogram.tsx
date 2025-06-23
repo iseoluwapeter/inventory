@@ -16,9 +16,12 @@ const CustomerHistogram = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [chartData, setChartData] = useState<any[][]>([]);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+
   const fetchCustomers = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/customer/");
+      const { data } = await axios.get(`${apiUrl}/customer/`);
       setCustomers(data);
       transformChartData(data);
     } catch (error) {

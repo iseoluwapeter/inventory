@@ -17,6 +17,11 @@ type staffs = {
   password: string;
 };
 
+type Role = {
+  id: string | number;
+  name: string;
+};
+
 const Staffs = () => {
   const [allStaffs, setAllStaffs] = useState<staffs[]>([]);
   const [addFormVisible, setAddFormVisible] = useState(false);
@@ -46,17 +51,28 @@ const Staffs = () => {
 
   const [deletingStaffId, setDeletingStaffId] = useState<number | null>(null);
   const [deleteForm, setDeleteForm] = useState(false);
+  const [roles, setRoles] = useState<Role[]>([]);
+
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const deleteStaffClick = (staff: staffs) => {
     setDeletingStaffId(Number(staff.id));
     setDeleteForm(true);
   };
 
+  const fetchRoles = async () => {
+    try {
+      const { data } = await axios.get(`${apiUrl}/role/`);
+      setRoles(data);
+    } catch (error) {
+      toast.error("Failed to fetch roles");
+      console.log("Error fetching roles", error);
+    }
+  };
+
   const confirmDelete = async () => {
     try {
-      await axios.delete(
-        `http://127.0.0.1:8000/staff/staff/${deletingStaffId}`
-      );
+      await axios.delete(`${apiUrl}/${deletingStaffId}`);
       toast.success("Staff successfully deleted");
       setDeleteForm(false);
       getStaffs();
@@ -85,10 +101,7 @@ const Staffs = () => {
     }
 
     try {
-      await axios.put(
-        `http://127.0.0.1:8000/staff/staff/${editingStaffId}`,
-        editingStaff
-      );
+      await axios.put(`${apiUrl}/staff/staff/${editingStaffId}`, editingStaff);
       toast.success("Updated staff successfully");
       getStaffs();
       setEditingStaffForm(false);
@@ -102,8 +115,6 @@ const Staffs = () => {
     setAddFormVisible(true);
   };
 
-
-
   const addStaff = async () => {
     if (!validForm(newStaff)) {
       toast.error("Please fill all required fields");
@@ -111,7 +122,7 @@ const Staffs = () => {
     }
 
     try {
-      await axios.post("http://127.0.0.1:8000/staff/staff", newStaff);
+      await axios.post(`${apiUrl}/staff/staff`, newStaff);
       setNewStaff({
         firstname: "",
         lastname: "",
@@ -134,7 +145,7 @@ const Staffs = () => {
 
   const getStaffs = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/staff/");
+      const { data } = await axios.get(`${apiUrl}/staff/`);
       setAllStaffs(data);
     } catch (error) {
       console.log("Fetching staff error:", error);
@@ -144,12 +155,13 @@ const Staffs = () => {
 
   useEffect(() => {
     getStaffs();
+    fetchRoles();
   }, []);
 
   const columns = [
     {
       name: "ID",
-      selector: (row: staffs) => row.id ?? 0, // assuming id is number | undefined
+      selector: (row: staffs) => row.id ?? 0,
       width: "60px",
       sortable: true,
     },
@@ -195,7 +207,6 @@ const Staffs = () => {
       ),
     },
   ];
-  
 
   return (
     <div className="px-10 py-5 bg-white rounded-md shadow-md">
@@ -214,18 +225,36 @@ const Staffs = () => {
               "email",
               "role_id",
               "password",
-            ].map((field) => (
-              <input
-                key={field}
-                type={field === "password" ? "password" : "text"}
-                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                value={newStaff[field as keyof staffs]}
-                onChange={(e) =>
-                  setNewStaff({ ...newStaff, [field]: e.target.value })
-                }
-                className="border p-2 rounded outline-amber-500 focus:outline-orange-400"
-              />
-            ))}
+            ].map((field) =>
+              field === "role_id" ? (
+                <select
+                  key={field}
+                  value={newStaff.role_id}
+                  onChange={(e) =>
+                    setNewStaff({ ...newStaff, role_id: e.target.value })
+                  }
+                  className="border p-2 rounded outline-amber-500 focus:outline-orange-400"
+                >
+                  <option value="">Select Role</option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  key={field}
+                  type={field === "password" ? "password" : "text"}
+                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                  value={newStaff[field as keyof staffs]}
+                  onChange={(e) =>
+                    setNewStaff({ ...newStaff, [field]: e.target.value })
+                  }
+                  className="border p-2 rounded outline-amber-500 focus:outline-orange-400"
+                />
+              )
+            )}
             <button
               onClick={addStaff}
               className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center w-50"
@@ -238,7 +267,7 @@ const Staffs = () => {
 
       {/* Edit staff form */}
       {editingStaffForm && (
-        <div className="fixed inset-0 bg-orange-700/20  bg-opacity-50 flex items-center justify-center z-50 p-5">
+        <div className="fixed inset-0 bg-orange-700/20 bg-opacity-50 flex items-center justify-center z-50 p-5">
           <div className="bg-white grid grid-cols-1 md:grid-cols-2 p-6 md:p-8 rounded-lg shadow-lg max-w-lg gap-5 w-full text-center">
             {[
               "firstname",
@@ -248,23 +277,47 @@ const Staffs = () => {
               "address",
               "email",
               "role_id",
-            ].map((field) => (
-              <input
-                key={field}
-                type="text"
-                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                value={editingStaff[field as keyof staffs]}
-                onChange={(e) =>
-                  setEditingStaff({ ...editingStaff, [field]: e.target.value })
-                }
-                className="border p-2 rounded"
-              />
-            ))}
+            ].map((field) =>
+              field === "role_id" ? (
+                <select
+                  key={field}
+                  value={editingStaff.role_id}
+                  onChange={(e) =>
+                    setEditingStaff({
+                      ...editingStaff,
+                      role_id: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded"
+                >
+                  <option value="">Select Role</option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  key={field}
+                  type="text"
+                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                  value={editingStaff[field as keyof staffs]}
+                  onChange={(e) =>
+                    setEditingStaff({
+                      ...editingStaff,
+                      [field]: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded"
+                />
+              )
+            )}
             <button
               onClick={editStaff}
-              className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center"
+              className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center col-span-1 md:col-span-2"
             >
-              Save changes <FaEdit />
+              Save changes <FaEdit className="ml-2" />
             </button>
           </div>
         </div>
@@ -272,7 +325,7 @@ const Staffs = () => {
 
       {/* Delete confirmation */}
       {deleteForm && (
-        <div className="fixed inset-0 z-50  bg-orange-700/30 flex justify-center items-center ">
+        <div className="fixed inset-0 z-50 bg-orange-700/30 flex justify-center items-center">
           <div className="my-3 p-4 bg-red-100 border border-red-300 rounded">
             <p className="text-red-700 mb-2">
               Are you sure you want to delete this staff?
@@ -287,7 +340,7 @@ const Staffs = () => {
         </div>
       )}
 
-      {/* DataTable rendering */}
+      {/* DataTable */}
       <DataTable
         columns={columns}
         data={allStaffs}

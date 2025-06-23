@@ -29,9 +29,12 @@ const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [searchText, setSearchText] = useState("");
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+
   const getAllOrders = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/order_details");
+      const { data } = await axios.get(`${apiUrl}/order_details`);
 
       console.log(data);
       setOrders(data);

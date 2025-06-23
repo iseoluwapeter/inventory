@@ -13,6 +13,8 @@ const Login = () => {
   const { setStaff } = useStaff();
 
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -26,7 +28,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/auth_router/login",
+        `${apiUrl}/auth_router/login`,
         formData,
         {
           headers: {
@@ -71,16 +73,14 @@ const Login = () => {
           type: "email",
           placeholder: "Email",
           value: email,
-          onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-            setEmail(e.target.value),
+          onChange: (e) => setEmail(e.target.value),
         },
         {
           name: "password",
           type: "password",
           placeholder: "Password",
           value: password,
-          onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-            setPassword(e.target.value),
+          onChange: (e) => setPassword(e.target.value),
         },
       ]}
       footerText={{

@@ -21,11 +21,13 @@ const OrderForm = () => {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [quantity, setQuantity] = useState("1");
   const [unitPrice, setUnitPrice] = useState("");
-  const [size, setSize] = useState("2"); // M
+
+
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const getCustomer = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/customer/");
+      const { data } = await axios.get(`${apiUrl}/customer/`);
       setCustomers(data);
     } catch (error) {
       console.log("Error fetching customers:", error);
@@ -35,7 +37,7 @@ const OrderForm = () => {
 
   const getProduct = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/product");
+      const { data } = await axios.get(`${apiUrl}/product`);
       setProducts(data);
     } catch (error) {
       console.log("Error fetching products", error);
@@ -57,26 +59,25 @@ const OrderForm = () => {
       !selectedCustomer ||
       !selectedProduct ||
       !quantity ||
-      !unitPrice ||
-      !size
+      !unitPrice 
     ) {
       toast.error("Please fill in all fields");
       return;
     }
 
     try {
-      const orderRes = await axios.post("http://127.0.0.1:8000/order/order", {
+      const orderRes = await axios.post(`${apiUrl}/order/order`, {
         customer_id: parseInt(selectedCustomer),
       });
 
       const orderId = orderRes.data.order_id;
 
-      await axios.post("http://127.0.0.1:8000/order_details/order/order", {
+      await axios.post(`${apiUrl}/order_details/order/order`, {
         order_id: orderId,
         product_id: parseInt(selectedProduct),
         unit_price: parseFloat(unitPrice),
         quantity: parseInt(quantity),
-        size: parseInt(size),
+
         discount: 0,
       });
 
@@ -85,7 +86,7 @@ const OrderForm = () => {
       setSelectedProduct("");
       setQuantity("1");
       setUnitPrice("");
-      setSize("2");
+
       
     } catch (err) {
       console.error(err);
@@ -163,22 +164,6 @@ const OrderForm = () => {
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
-
-        {/* Size */}
-        {/* <div className="flex flex-col">
-          <label className="text-sm font-semibold text-gray-700 mb-1">
-            Size
-          </label>
-          <select
-            value={size}
-            onChange={(e) => setSize(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          >
-            <option value="1">S</option>
-            <option value="2">M</option>
-            <option value="3">L</option>
-          </select>
-        </div> */}
       </div>
 
       <button
