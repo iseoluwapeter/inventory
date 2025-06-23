@@ -13,7 +13,6 @@ type Order = {
 };
 
 const OrdersPieChart = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
   const [chartData, setChartData] = useState<any[][]>([]);
 
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -21,7 +20,6 @@ const OrdersPieChart = () => {
   const getOrders = async () => {
     try {
       const { data } = await axios.get(`${apiUrl}/order/`);
-      setOrders(data);
       transformDataForChart(data);
     } catch (err) {
       console.error("Failed to fetch orders:", err);

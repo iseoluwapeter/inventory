@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const apiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+  const apiUrl = import.meta.env.VITE_API_URL ;
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -76,7 +76,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await axios.post(`${apiUrl}/staff/staff`, {
+      await axios.post(`${apiUrl}/staff/staff`, {
         firstname,
         lastname,
         email,

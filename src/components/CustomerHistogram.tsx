@@ -13,16 +13,12 @@ type Customer = {
 };
 
 const CustomerHistogram = () => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
   const [chartData, setChartData] = useState<any[][]>([]);
-
   const apiUrl = import.meta.env.VITE_API_URL;
-
 
   const fetchCustomers = async () => {
     try {
       const { data } = await axios.get(`${apiUrl}/customer/`);
-      setCustomers(data);
       transformChartData(data);
     } catch (error) {
       console.error("Error fetching customers", error);
@@ -30,9 +26,7 @@ const CustomerHistogram = () => {
   };
 
   const transformChartData = (data: Customer[]) => {
-    // Example: grouping customers by staff_id to visualize distribution
     const rows = data.map((customer) => [customer.staff_id]);
-
     const histogramData = [["Staff ID"], ...rows];
     setChartData(histogramData);
   };
@@ -55,7 +49,7 @@ const CustomerHistogram = () => {
           options={{
             title: "Histogram of Customers by Staff ID",
             legend: { position: "none" },
-            colors: ["#1d4ed8"], // Tailwind blue-700
+            colors: ["#1d4ed8"],
             hAxis: {
               title: "Staff ID",
             },

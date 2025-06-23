@@ -7,7 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "./components/Layout";
 import Staffs from "./components/Staffs";
-import { Outlet } from "react-router-dom";
+
 
 import Products from "./pages/Products";
 import Category from "./pages/Category";
