@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useStaff } from "../context/StaffContext";
 
-
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -14,7 +13,6 @@ const Login = () => {
 
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
-
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -36,11 +34,11 @@ const Login = () => {
           },
         }
       );
-      const {access_token, staff_id}  = response.data;
-      if(!staff_id){
-        toast.error("staff missing in response")
-        return;
-      }
+      const { access_token, staff_id } = response.data;
+      // if(!staff_id){
+      //   toast.error("staff missing in response")
+      //   return;
+      // }
       console.log("Full response from backend:", response.data);
 
       localStorage.setItem("token", access_token);
@@ -53,10 +51,10 @@ const Login = () => {
       toast.success("Login Successful!");
 
       navigate("/");
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error);
-      const backendError = error.response?.data?.detail || "Error loggin in"
-      toast.error(backendError)
+      const backendError = error.response?.data?.detail || "Error loggin in";
+      toast.error(backendError);
     }
     setEmail("");
     setPassword("");

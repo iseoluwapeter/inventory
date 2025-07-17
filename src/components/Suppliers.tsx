@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaPlusCircle, FaMinusCircle, FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
+import { MdClose, MdDelete } from "react-icons/md";
 import DataTable from "react-data-table-component";
 
 type suppliers = {
@@ -76,7 +76,7 @@ const Suppliers = () => {
       toast.error("Please fill all required fields");
       return;
     }
-    
+
     try {
       await axios.put(
         `${apiUrl}/supplier/supplier/${editingSupplierId}`,
@@ -109,8 +109,6 @@ const Suppliers = () => {
     const { name, address, email, phone } = supplier;
     return !!(name && address && email && phone); // ensures all are truthy
   };
-  
-  
 
   const addSuppliers = async () => {
     if (!validForm(newSupplier)) {
@@ -158,21 +156,20 @@ const Suppliers = () => {
       selector: (row: suppliers) => row.phone,
     },
     {
-  name: "Actions",
-  cell: (row: suppliers) => (
-    <div className="flex gap-2">
-      <FaEdit
-        className="text-orange-500 cursor-pointer"
-        onClick={() => handleEditClick(row)}
-      />
-      <FaMinusCircle
-        className="text-red-500 cursor-pointer"
-        onClick={() => handleDeleteClick(row)}
-      />
-    </div>
-  ),
-}
-
+      name: "Actions",
+      cell: (row: suppliers) => (
+        <div className="flex gap-2">
+          <FaEdit
+            className="text-orange-500 cursor-pointer"
+            onClick={() => handleEditClick(row)}
+          />
+          <FaMinusCircle
+            className="text-red-500 cursor-pointer"
+            onClick={() => handleDeleteClick(row)}
+          />
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -180,7 +177,12 @@ const Suppliers = () => {
       {addModal && (
         <div className="fixed inset-0 z-50 flex justify-center items-center bg-orange-700/30">
           <div className="bg-white p-5 rounded-md space-y-2">
-            <h2>Add new supplier</h2>
+            <div
+              onClick={() => setAddModal(false)}
+              className="flex justify-end text-2xl mb-2 cursor-pointer"
+            >
+              <MdClose className=" transition-300 ease-in-out hover:scale-110 hover:text-orange-400" />
+            </div>
             <div className="rounded-md grid grid-cols-1 md:grid-cols-2  gap-5">
               <input
                 type="text"
@@ -246,9 +248,9 @@ const Suppliers = () => {
 
       <button
         onClick={() => setAddModal(true)}
-        className="bg-orange-700 px-3 py-1 rounded-md text-white flex items-center gap-2"
+        className="bg-orange-800 px-3 py-2 rounded-md text-white flex items-center gap-2"
       >
-        Add Supplier <FaPlusCircle />
+        Add Supplier
       </button>
 
       {deleteFormVisible && (
@@ -257,12 +259,20 @@ const Suppliers = () => {
             <p className="text-red-700 mb-2">
               Are you sure you want to delete this staff?
             </p>
-            <button
-              onClick={confirmDeletingSupplier}
-              className="bg-red-500 text-white px-3 py-1 rounded flex items-center gap-2 mx-auto"
-            >
-              <MdDelete /> Confirm Delete
-            </button>
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={confirmDeletingSupplier}
+                className="bg-red-500 text-white px-3 py-1 rounded flex items-center "
+              >
+                <MdDelete /> Yes
+              </button>
+              <button
+                onClick={() => setDeleteFormVisible(false)}
+                className="bg-green-500 text-white px-3 py-1 rounded flex items-center "
+              >
+                No
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -270,30 +280,38 @@ const Suppliers = () => {
       {/* EDITING SUPPLIER MODAL */}
       {editModal && (
         <div className="fixed inset-0 bg-orange-700/20  bg-opacity-50 flex items-center justify-center z-50 p-5">
-          <div className="bg-white grid grid-cols-1 md:grid-cols-2 p-6 md:p-8 rounded-lg shadow-lg max-w-lg gap-5 w-full text-center">
-            {["name", "address", "email", "phone", "other_details"].map(
-              (field) => (
-                <input
-                  key={field}
-                  type="text"
-                  placeholder={field}
-                  value={editingSupplier[field as keyof suppliers]}
-                  onChange={(e) =>
-                    setEditingSupplier({
-                      ...editingSupplier,
-                      [field]: e.target.value,
-                    })
-                  }
-                  className="border p-2 rounded"
-                />
-              )
-            )}
-            <button
-              onClick={saveEditSupplier}
-              className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center"
+          <div className="bg-white rounded-lg shadow-lg max-w-lg">
+            <div
+              onClick={() => setEditModal(false)}
+              className="flex justify-end text-2xl mb-2 cursor-pointer"
             >
-              Save changes <FaEdit />
-            </button>
+              <MdClose className=" transition-300 ease-in-out hover:scale-110 hover:text-orange-400" />
+            </div>
+            <div className=" grid grid-cols-1 md:grid-cols-2 p-6 md:p-8  gap-5 w-full text-center">
+              {["name", "address", "email", "phone", "other_details"].map(
+                (field) => (
+                  <input
+                    key={field}
+                    type="text"
+                    placeholder={field}
+                    value={editingSupplier[field as keyof suppliers]}
+                    onChange={(e) =>
+                      setEditingSupplier({
+                        ...editingSupplier,
+                        [field]: e.target.value,
+                      })
+                    }
+                    className="border p-2 rounded"
+                  />
+                )
+              )}
+              <button
+                onClick={saveEditSupplier}
+                className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center"
+              >
+                Save changes <FaEdit />
+              </button>
+            </div>
           </div>
         </div>
       )}

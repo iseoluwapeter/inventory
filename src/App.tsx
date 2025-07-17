@@ -17,6 +17,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Customers from "./components/Customers";
+import ErrorPage from "./components/ErrorPage";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
       <Routes>
         <Route element={<Layout />}>
           {/* Protected Routes */}
+          <Route path="*" element={<ErrorPage/>}/>
           <Route
             path="/"
             element={

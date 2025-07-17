@@ -68,7 +68,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("adminId");
-    localStorage.removeItem("staff")
+    localStorage.removeItem("staff");
     navigate("/login", { replace: true });
   };
 
@@ -76,7 +76,7 @@ const Sidebar = () => {
     <>
       {/* Mobile top bar */}
       <div className="md:hidden p-4 bg-orange-900 text-white flex justify-between items-center">
-        <h1 className="text-lg font-bold">My App</h1>
+        <h1 className="text-lg font-bold">Lead City Superstore</h1>
         <button onClick={toggleSidebar}>
           {isOpen ? <IoMdClose size={24} /> : <HiMenu size={24} />}
         </button>
@@ -84,11 +84,12 @@ const Sidebar = () => {
 
       {/* Sidebar panel */}
       <aside
-        className={`bg-orange-900 text-white w-64 p-6 fixed md:relative z-40 transform ${
+        className={`bg-orange-900 text-white  w-64 p-6 fixed md:relative z-40 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition-transform duration-300 ease-in-out`}
       >
-        <ul className="space-y-6 text-base md:text-lg">
+        <p className="font-semibold text-xl mb-7">Lead City Superstore</p>
+        <ul className="space-y-6 text-base md:text-md">
           {sideMenu.map((menu) => (
             <li key={menu.id}>
               <NavLink

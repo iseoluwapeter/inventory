@@ -3,6 +3,7 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { toast } from "react-toastify";
 import { useStaff } from "../context/StaffContext";
+import { MdClose } from "react-icons/md";
 
 type Product = {
   id: number;
@@ -92,55 +93,63 @@ const Customers = () => {
     <div className="w-full px-10">
       {addForm && (
         <div className="fixed inset-0 z-50 bg-orange-600/45 flex justify-center items-center">
-          <div className="grid grid-cols-1 md:grid-cols-3 bg-white   gap-5 p-4 w-[80%] mx-auto rounded-md shadow-md ">
-            <input
-              type="text"
-              placeholder="Firstname"
-              className="border p-2 rounded-md border-orange-700"
-              value={firstname}
-              onChange={(e: any) => setFirstname(e.target.value)}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Lastname"
-              className="border p-2 rounded-md border-orange-700"
-              value={lastname}
-              onChange={(e: any) => setLastname(e.target.value)}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Email"
-              className="border p-2 rounded-md border-orange-700"
-              value={email}
-              onChange={(e: any) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="tel"
-              placeholder="Phone"
-              className="border p-2 rounded-md border-orange-700"
-              value={phone}
-              onChange={(e: any) => setPhone(e.target.value)}
-              required
-            />
-
-            <input
-              type="text"
-              placeholder="Address"
-              className="border p-2 rounded-md border-orange-700"
-              value={address}
-              onChange={(e: any) => setAddress(e.target.value)}
-              required
-            />
-
-            <button
-              onClick={handleAdd}
-              className=" bg-orange-800 text-white px-3 py-2 rounded-md"
+          <div className="bg-white p-4 w-[80%] mx-auto rounded-md shadow-md">
+            <div
+              onClick={() => setAddForm(false)}
+              className="flex justify-end text-2xl mb-2 cursor-pointer"
             >
-              Add Customer
-            </button>
+              <MdClose className=" transition-300 ease-in-out hover:scale-110 hover:text-orange-400" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3    gap-5  ">
+              <input
+                type="text"
+                placeholder="Firstname"
+                className="border p-2 rounded-md border-orange-700"
+                value={firstname}
+                onChange={(e: any) => setFirstname(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Lastname"
+                className="border p-2 rounded-md border-orange-700"
+                value={lastname}
+                onChange={(e: any) => setLastname(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Email"
+                className="border p-2 rounded-md border-orange-700"
+                value={email}
+                onChange={(e: any) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                type="tel"
+                placeholder="Phone"
+                className="border p-2 rounded-md border-orange-700"
+                value={phone}
+                onChange={(e: any) => setPhone(e.target.value)}
+                required
+              />
+
+              <input
+                type="text"
+                placeholder="Address"
+                className="border p-2 rounded-md border-orange-700"
+                value={address}
+                onChange={(e: any) => setAddress(e.target.value)}
+                required
+              />
+
+              <button
+                onClick={handleAdd}
+                className=" bg-orange-800 text-white px-3 py-2 rounded-md"
+              >
+                Add Customer
+              </button>
+            </div>
           </div>
         </div>
       )}

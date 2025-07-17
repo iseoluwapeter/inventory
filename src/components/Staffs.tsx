@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaMinusCircle, FaPlus, FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
+import { MdClose, MdDelete } from "react-icons/md";
 import DataTable from "react-data-table-component";
 
 type staffs = {
@@ -210,57 +210,71 @@ const Staffs = () => {
 
   return (
     <div className="px-10 py-5 bg-white rounded-md shadow-md">
-      <h1 className="text-2xl font-bold mb-4">Staff List</h1>
+      <h2
+        className="bg-orange-700 p-2 rounded-md my-4 text-white w-fit text-center cursor-pointer transition duration-300 ease-in-out hover:bg-orange-600 hover:scale-105"
+        onClick={handleAddStudentClick}
+      >
+        Add Staff
+      </h2>
+      <h1 className="text-xl mb-4">Staff List</h1>
 
       {/* Add staff form */}
       {addFormVisible && (
         <div className="fixed inset-0 bg-orange-700/30 flex justify-center items-center z-50">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 bg-white shadow-lg p-5 rounded-md">
-            {[
-              "firstname",
-              "lastname",
-              "username",
-              "phone",
-              "address",
-              "email",
-              "role_id",
-              "password",
-            ].map((field) =>
-              field === "role_id" ? (
-                <select
-                  key={field}
-                  value={newStaff.role_id}
-                  onChange={(e) =>
-                    setNewStaff({ ...newStaff, role_id: e.target.value })
-                  }
-                  className="border p-2 rounded outline-amber-500 focus:outline-orange-400"
-                >
-                  <option value="">Select Role</option>
-                  {roles.map((role) => (
-                    <option key={role.id} value={role.id}>
-                      {role.name}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  key={field}
-                  type={field === "password" ? "password" : "text"}
-                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                  value={newStaff[field as keyof staffs]}
-                  onChange={(e) =>
-                    setNewStaff({ ...newStaff, [field]: e.target.value })
-                  }
-                  className="border p-2 rounded outline-amber-500 focus:outline-orange-400"
-                />
-              )
-            )}
-            <button
-              onClick={addStaff}
-              className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center w-50"
+          <div className=" bg-white shadow-lg p-5 rounded-md">
+            <div
+              onClick={() => setAddFormVisible(false)}
+              className="flex justify-end text-2xl mb-2 cursor-pointer"
             >
-              <FaPlus />
-            </button>
+              <MdClose className=" transition-300 ease-in-out hover:scale-110 hover:text-orange-400" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 ">
+              {[
+                "firstname",
+                "lastname",
+                "username",
+                "phone",
+                "address",
+                "email",
+                "role_id",
+                "password",
+              ].map((field) =>
+                field === "role_id" ? (
+                  <select
+                    key={field}
+                    value={newStaff.role_id}
+                    onChange={(e) =>
+                      setNewStaff({ ...newStaff, role_id: e.target.value })
+                    }
+                    className="border p-2 rounded outline-amber-500 focus:outline-orange-400"
+                  >
+                    <option value="">Select Role</option>
+                    {roles.map((role) => (
+                      <option key={role.id} value={role.id}>
+                        {role.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    key={field}
+                    type={field === "password" ? "password" : "text"}
+                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                    value={newStaff[field as keyof staffs]}
+                    onChange={(e) =>
+                      setNewStaff({ ...newStaff, [field]: e.target.value })
+                    }
+                    className="border p-2 rounded outline-amber-500 focus:outline-orange-400"
+                  />
+                )
+              )}
+              <button
+                onClick={addStaff}
+                className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center w-50"
+              >
+                Add staff
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -268,57 +282,65 @@ const Staffs = () => {
       {/* Edit staff form */}
       {editingStaffForm && (
         <div className="fixed inset-0 bg-orange-700/20 bg-opacity-50 flex items-center justify-center z-50 p-5">
-          <div className="bg-white grid grid-cols-1 md:grid-cols-2 p-6 md:p-8 rounded-lg shadow-lg max-w-lg gap-5 w-full text-center">
-            {[
-              "firstname",
-              "lastname",
-              "username",
-              "phone",
-              "address",
-              "email",
-              "role_id",
-            ].map((field) =>
-              field === "role_id" ? (
-                <select
-                  key={field}
-                  value={editingStaff.role_id}
-                  onChange={(e) =>
-                    setEditingStaff({
-                      ...editingStaff,
-                      role_id: e.target.value,
-                    })
-                  }
-                  className="border p-2 rounded"
-                >
-                  <option value="">Select Role</option>
-                  {roles.map((role) => (
-                    <option key={role.id} value={role.id}>
-                      {role.name}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  key={field}
-                  type="text"
-                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                  value={editingStaff[field as keyof staffs]}
-                  onChange={(e) =>
-                    setEditingStaff({
-                      ...editingStaff,
-                      [field]: e.target.value,
-                    })
-                  }
-                  className="border p-2 rounded"
-                />
-              )
-            )}
-            <button
-              onClick={editStaff}
-              className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center col-span-1 md:col-span-2"
+          <div className="bg-white rounded-lg shadow-lg max-w-lg p-6 md:p-8 ">
+            <div
+              onClick={() => setEditingStaffForm(false)}
+              className="flex justify-end text-2xl cursor-pointer mb-4"
             >
-              Save changes <FaEdit className="ml-2" />
-            </button>
+              <MdClose className=" transition-300 ease-in-out hover:scale-110 hover:text-orange-400" />
+            </div>
+            <div className=" grid grid-cols-1 md:grid-cols-2   gap-5 w-full text-center">
+              {[
+                "firstname",
+                "lastname",
+                "username",
+                "phone",
+                "address",
+                "email",
+                "role_id",
+              ].map((field) =>
+                field === "role_id" ? (
+                  <select
+                    key={field}
+                    value={editingStaff.role_id}
+                    onChange={(e) =>
+                      setEditingStaff({
+                        ...editingStaff,
+                        role_id: e.target.value,
+                      })
+                    }
+                    className="border p-2 rounded"
+                  >
+                    <option value="">Select Role</option>
+                    {roles.map((role) => (
+                      <option key={role.id} value={role.id}>
+                        {role.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    key={field}
+                    type="text"
+                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                    value={editingStaff[field as keyof staffs]}
+                    onChange={(e) =>
+                      setEditingStaff({
+                        ...editingStaff,
+                        [field]: e.target.value,
+                      })
+                    }
+                    className="border p-2 rounded"
+                  />
+                )
+              )}
+              <button
+                onClick={editStaff}
+                className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center col-span-1 md:col-span-2"
+              >
+                Save changes <FaEdit className="ml-2" />
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -330,15 +352,25 @@ const Staffs = () => {
             <p className="text-red-700 mb-2">
               Are you sure you want to delete this staff?
             </p>
-            <button
-              onClick={confirmDelete}
-              className="bg-red-500 text-white px-3 py-1 rounded flex items-center gap-2"
-            >
-              <MdDelete /> Confirm Delete
-            </button>
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={confirmDelete}
+                className="bg-red-500 text-white px-3 py-1 rounded flex items-center gap-2"
+              >
+                <MdDelete /> Yes
+              </button>
+              <button
+                onClick={() => setDeleteForm(false)}
+                className="bg-green-500 text-white px-3 py-1 rounded flex items-center "
+              >
+                No
+              </button>
+            </div>
           </div>
         </div>
       )}
+
+      {/* Add button */}
 
       {/* DataTable */}
       <DataTable
@@ -349,14 +381,6 @@ const Staffs = () => {
         striped
         responsive
       />
-
-      {/* Add button */}
-      <h2
-        className="bg-orange-700 p-2 rounded-md mt-7 text-white w-fit text-center cursor-pointer transition duration-300 ease-in-out hover:bg-orange-600 hover:scale-105"
-        onClick={handleAddStudentClick}
-      >
-        Add Staff
-      </h2>
     </div>
   );
 };
