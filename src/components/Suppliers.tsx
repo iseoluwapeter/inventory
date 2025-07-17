@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { FaPlusCircle, FaMinusCircle, FaEdit } from "react-icons/fa";
+import { FaMinusCircle, FaEdit } from "react-icons/fa";
 import { MdClose, MdDelete } from "react-icons/md";
 import DataTable from "react-data-table-component";
 
