@@ -6,10 +6,10 @@ const Home = () => {
   return (
     <div>
       <div className="flex">
-        <div className="w-full grid grid-cols-2 gap-5">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* <OrdersBarChart /> */}
           <OrdersPieChart />
-          <CustomerHistogram/>
+          <CustomerHistogram />
         </div>
       </div>
     </div>
