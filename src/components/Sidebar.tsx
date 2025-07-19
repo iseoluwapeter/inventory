@@ -11,6 +11,8 @@ import { MdOutlinePayments } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { PiPersonSimpleCircleFill } from "react-icons/pi";
+import { motion } from "framer-motion";
+import { storeLogo } from "../assets";
 
 const sideMenu = [
   { id: 1, icon: <RxDashboard size={20} />, title: "Dashboard", path: "/" },
@@ -76,7 +78,10 @@ const Sidebar = () => {
     <>
       {/* Mobile top bar */}
       <div className="md:hidden p-4 bg-orange-900 text-white flex justify-between items-center">
-        <h1 className="text-lg font-bold">Lead City Superstore</h1>
+        <div className="flex items-center">
+          <img src={storeLogo} alt="store_log" width="50" />
+          <h1 className="text-lg font-bold">Lead City Superstore</h1>
+        </div>
         <button onClick={toggleSidebar}>
           {isOpen ? <IoMdClose size={24} /> : <HiMenu size={24} />}
         </button>
@@ -88,7 +93,11 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition-transform duration-300 ease-in-out`}
       >
-        <p className="font-semibold text-xl mb-7">Lead City Superstore</p>
+        <div className="flex items-center mb-7">
+          <img src={storeLogo} alt="store_log" className="w-[70px]" />
+          <p className="font-semibold text-xl">Lead City Superstore</p>
+        </div>
+
         <ul className="space-y-6 text-base md:text-md">
           {sideMenu.map((menu) => (
             <li key={menu.id}>
@@ -111,13 +120,16 @@ const Sidebar = () => {
 
           {/* Logout */}
           <li>
-            <button
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
               onClick={() => setShowModal(true)}
-              className="flex items-center gap-4 px-2 py-2 rounded hover:text-blue-300 transition-all w-full"
+              className="flex items-center gap-4 px-2 py-2 rounded hover:text-orange-00 transition-all w-full"
             >
               <HiOutlineLogout size={20} />
               <span>Logout</span>
-            </button>
+            </motion.button>
           </li>
         </ul>
       </aside>
@@ -131,7 +143,12 @@ const Sidebar = () => {
 
           {/* Modal */}
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-xl shadow-2xl w-[90%] max-w-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="bg-white p-6 rounded-xl shadow-2xl w-[90%] max-w-sm"
+            >
               <h2 className="text-lg font-semibold text-gray-800 mb-4">
                 Are you sure you want to logout?
               </h2>
@@ -142,14 +159,17 @@ const Sidebar = () => {
                 >
                   Cancel
                 </button>
-                <button
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   onClick={handleLogout}
-                  className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 transition"
+                  className="px-4 py-2 rounded bg-orange-600 text-white hover:bg-orange-700 transition"
                 >
                   Logout
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           </div>
         </>
       )}

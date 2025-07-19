@@ -4,7 +4,7 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { MdClose } from "react-icons/md";
 import { toast } from "react-toastify";
-
+import { motion } from "framer-motion";
 
 type Payment = {
   bill_number?: number;
@@ -57,7 +57,7 @@ const Payment = () => {
       toast.success("Sucessfully added payment");
       getProducts();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("Error adding payment. Please try again!");
     } finally {
       setAddModal(false);
@@ -86,11 +86,16 @@ const Payment = () => {
   ];
 
   return (
-    <div className="w-full px-10">
+    <div className="w-full px-3">
       {/* add payment  */}
       {addModal && (
         <div className="fixed inset-0 z-50 flex justify-center items-center bg-orange-700/30">
-          <div className="bg-white p-5 rounded-md space-y-2">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="bg-white p-5 rounded-md space-y-2"
+          >
             <div
               onClick={() => setAddModal(false)}
               className="flex justify-end text-2xl mb-2 cursor-pointer"
@@ -129,7 +134,7 @@ const Payment = () => {
                 Add supplier
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -140,7 +145,12 @@ const Payment = () => {
         Add Payment
       </button>
       {/* Table */}
-      <div className="pt-7">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="pt-5"
+      >
         <DataTable
           title="Payment"
           columns={columns}
@@ -149,7 +159,7 @@ const Payment = () => {
           highlightOnHover
           striped
         />
-      </div>
+      </motion.div>
     </div>
   );
 };

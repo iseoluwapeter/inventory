@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import OrderForm from "./OrderForm";
 import DataTable from "react-data-table-component";
+import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 type Customer = {
   id: number;
@@ -16,13 +18,13 @@ type Customer = {
 type Order = {
   id: number;
   customer_id: number;
-  product: string,
+  product: string;
   quantity: number;
   unit_price: number;
   total: number;
   order_date: string;
   customer: Customer;
-  payment: string
+  payment: string;
 };
 
 const Orders = () => {
@@ -31,15 +33,15 @@ const Orders = () => {
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
-
   const getAllOrders = async () => {
     try {
       const { data } = await axios.get(`${apiUrl}/order_details`);
 
-      console.log(data);
+      // console.log(data);
       setOrders(data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error("Error fetching orders, Try again!");
     }
   };
 
@@ -94,19 +96,22 @@ const Orders = () => {
     // const phone = order.customer.phone;
     const search = searchText.toLowerCase();
 
-    return (
-      fullName.includes(search) 
-      // email.includes(search) ||
-      // phone.includes(search)
-    );
+    return fullName.includes(search);
+    // email.includes(search) ||
+    // phone.includes(search)
   });
 
   return (
     <>
       <OrderForm />
 
-      <div className="mt-5 rounded-xl shadow-md bg-white p-4">
-        <div className="mb-4 flex flex-row justify-between items-center">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="mt-5 rounded-xl shadow-md bg-white p-4"
+      >
+        <div className="mb-4 flex flex-row justify-between gap-3 items-center">
           <h2 className="text-xl font-semibold text-orange-800">
             Customer Orders
           </h2>
@@ -128,7 +133,7 @@ const Orders = () => {
           responsive
           noDataComponent="No orders found"
         />
-      </div>
+      </motion.div>
     </>
   );
 };

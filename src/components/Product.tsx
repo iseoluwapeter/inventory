@@ -3,6 +3,7 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { toast } from "react-toastify";
 import { MdClose } from "react-icons/md";
+import {motion} from "framer-motion"
 
 type Product = {
   id: number;
@@ -45,9 +46,9 @@ const Product = () => {
     try {
       const { data } = await axios.get(`${apiUrl}/product`);
       setProducts(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
-      console.log(error);
+      toast.error("Error fetching products");
     }
   };
 
@@ -56,7 +57,7 @@ const Product = () => {
       const { data } = await axios.get(`${apiUrl}/category`);
       setCategory(data);
     } catch (error) {
-      console.log(error);
+      toast.error("Error fetching categories");
     }
   };
 
@@ -65,7 +66,7 @@ const Product = () => {
       const { data } = await axios.get(`${apiUrl}/supplier/`);
       setSupplier(data);
     } catch (error) {
-      console.log(error);
+      toast.error("Error fetching suppliers");
     }
   };
 
@@ -86,9 +87,18 @@ const Product = () => {
       category_id: selectedCategory,
     };
 
-    if(!name || !description || !unit || !price || !status || !otherDetails||!selectedSupplier||!selectedCategory){
-      toast.error("Please fill all required spaces")
-      return
+    if (
+      !name ||
+      !description ||
+      !unit ||
+      !price ||
+      !status ||
+      !otherDetails ||
+      !selectedSupplier ||
+      !selectedCategory
+    ) {
+      toast.error("Please fill all required spaces");
+      return;
     }
     try {
       await axios.post(`${apiUrl}/product/product`, payload);
@@ -137,10 +147,15 @@ const Product = () => {
   ];
 
   return (
-    <div className="w-full px-10">
+    <div className="w-full px-3">
       {addForm && (
         <div className="fixed inset-0 z-50 bg-orange-600/45 flex justify-center items-center">
-          <div className=" bg-white   p-4 w-[80%] mx-auto rounded-md shadow-md">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className=" bg-white   p-4 w-[80%] mx-auto rounded-md shadow-md"
+          >
             <div
               onClick={() => setAddForm(false)}
               className="flex justify-end text-2xl mb-2 cursor-pointer"
@@ -239,7 +254,7 @@ const Product = () => {
                 Add Product
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -249,7 +264,12 @@ const Product = () => {
       >
         New product
       </button>
-      <div className="pt-5">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="pt-5"
+      >
         <DataTable
           title="Products"
           columns={columns}
@@ -258,7 +278,7 @@ const Product = () => {
           highlightOnHover
           striped
         />
-      </div>
+      </motion.div>
     </div>
   );
 };

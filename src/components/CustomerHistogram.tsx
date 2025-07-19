@@ -37,7 +37,7 @@ const CustomerHistogram = () => {
 
   return (
     <div className="mt-10 bg-white p-6 rounded-xl shadow-md">
-      <h2 className="text-xl font-semibold text-orange-800 mb-4">
+      <h2 className="text-xl font-semibold text-orange-800 ">
         Customer Distribution by Staff ID
       </h2>
       {chartData.length > 1 ? (
@@ -47,7 +47,7 @@ const CustomerHistogram = () => {
           height="400px"
           data={chartData}
           options={{
-            title: "Histogram of Customers by Staff ID",
+            // title: "Histogram of Customers by Staff ID",
             legend: { position: "none" },
             colors: ["#1d4ed8"],
             hAxis: {
@@ -59,7 +59,7 @@ const CustomerHistogram = () => {
           }}
         />
       ) : (
-        <p>Loading histogram...</p>
+        <p>Loading data...</p>
       )}
     </div>
   );

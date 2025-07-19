@@ -4,6 +4,7 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { MdClose } from "react-icons/md";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 type Category = {
   id: number;
@@ -21,7 +22,7 @@ const Category = () => {
 
   const getCategory = async () => {
     try {
-      const { data } = await axios.get("http://127.0.0.1:8000/category");
+      const { data } = await axios.get(`${apiUrl}/category`);
       setCategory(data);
     } catch (error) {
       console.log(error);
@@ -37,9 +38,9 @@ const Category = () => {
       name: categoryName,
       description: categoryDescription,
     };
-    if(!categoryName || !categoryDescription){
-      toast.error("Please fill all necessary fields")
-      return
+    if (!categoryName || !categoryDescription) {
+      toast.error("Please fill all necessary fields");
+      return;
     }
 
     try {
@@ -76,11 +77,16 @@ const Category = () => {
   ];
 
   return (
-    <div className="w-full px-10">
+    <div className="w-full px-3">
       {/* add Modal */}
       {addModal && (
         <div className="fixed inset-0 z-50 bg-orange-600/45 flex justify-center items-center">
-          <div className=" bg-white   p-4 w-[80%] mx-auto rounded-md shadow-md ">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className=" bg-white   p-4 w-[80%] mx-auto rounded-md shadow-md "
+          >
             <div
               onClick={() => setAddModal(false)}
               className="flex justify-end text-2xl mb-2 cursor-pointer"
@@ -107,12 +113,12 @@ const Category = () => {
 
               <button
                 onClick={handleAdd}
-                className="bg-orange-800 text-white rounded-md "
+                className="bg-orange-800 text-white rounded-md p-2"
               >
                 Add Category
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -124,7 +130,12 @@ const Category = () => {
       </button>
 
       {/* Table */}
-      <div className="pt-10">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="pt-5"
+      >
         <DataTable
           title="Category"
           columns={columns}
@@ -133,7 +144,7 @@ const Category = () => {
           highlightOnHover
           striped
         />
-      </div>
+      </motion.div>
     </div>
   );
 };

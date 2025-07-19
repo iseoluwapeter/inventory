@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import { toast } from "react-toastify";
 import { useStaff } from "../context/StaffContext";
 import { MdClose } from "react-icons/md";
+import { motion } from "framer-motion";
 
 type Product = {
   id: number;
@@ -25,16 +26,16 @@ const Customers = () => {
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
-
   const { staff } = useStaff();
 
   const getCustomers = async () => {
     try {
       const { data } = await axios.get(`${apiUrl}/customer`);
       setCustomers(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error("Error fetching customers");
     }
   };
 
@@ -90,10 +91,15 @@ const Customers = () => {
   ];
 
   return (
-    <div className="w-full px-10">
+    <div className="w-full px-3">
       {addForm && (
         <div className="fixed inset-0 z-50 bg-orange-600/45 flex justify-center items-center">
-          <div className="bg-white p-4 w-[80%] mx-auto rounded-md shadow-md">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="bg-white p-4 w-[80%] mx-auto rounded-md shadow-md"
+          >
             <div
               onClick={() => setAddForm(false)}
               className="flex justify-end text-2xl mb-2 cursor-pointer"
@@ -150,7 +156,7 @@ const Customers = () => {
                 Add Customer
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -160,7 +166,12 @@ const Customers = () => {
       >
         New customer
       </button>
-      <div className="pt-5">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="pt-5"
+      >
         <DataTable
           title="Customers"
           columns={columns}
@@ -169,7 +180,7 @@ const Customers = () => {
           highlightOnHover
           striped
         />
-      </div>
+      </motion.div>
     </div>
   );
 };

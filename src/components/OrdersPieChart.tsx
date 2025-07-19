@@ -34,7 +34,6 @@ const OrdersPieChart = () => {
       customerOrderCount[name] = (customerOrderCount[name] || 0) + 1;
     });
 
-    // Create data for Google Charts
     const chartRows = Object.entries(customerOrderCount);
     const result = [["Customer", "Orders"], ...chartRows];
     setChartData(result);
@@ -45,8 +44,8 @@ const OrdersPieChart = () => {
   }, []);
 
   return (
-    <div className="mt-10 bg-white rounded-xl shadow-md p-6">
-      <h2 className="text-xl font-bold mb-4 text-orange-800">
+    <div className="mt-4 bg-white rounded-lg shadow p-4">
+      <h2 className="text-lg font-semibold text-orange-800 mb-2">
         Orders Per Customer
       </h2>
 
@@ -54,23 +53,17 @@ const OrdersPieChart = () => {
         <Chart
           chartType="PieChart"
           width="100%"
-          height="400px"
+          height="300px"
           data={chartData}
           options={{
-            title: "Number of Orders by Customer",
-            chartArea: { width: "70%" },
-            hAxis: {
-              title: "Number of Orders",
-              minValue: 0,
-            },
-            vAxis: {
-              title: "Customer",
-            },
-            colors: ["#1e40af"], // Tailwind blue-800
+            title: "",
+            chartArea: { width: "90%", height: "80%" },
+            legend: { position: "right", textStyle: { fontSize: 12 } },
+            colors: ["#1e40af"],
           }}
         />
       ) : (
-        <p>Loading chart...</p>
+        <p className="text-sm text-gray-600">Loading chart...</p>
       )}
     </div>
   );

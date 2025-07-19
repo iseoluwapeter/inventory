@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FaMinusCircle, FaEdit } from "react-icons/fa";
 import { MdClose, MdDelete } from "react-icons/md";
 import DataTable from "react-data-table-component";
+import { motion } from "framer-motion";
 
 type staffs = {
   id?: string;
@@ -148,7 +149,7 @@ const Staffs = () => {
       const { data } = await axios.get(`${apiUrl}/staff/`);
       setAllStaffs(data);
     } catch (error) {
-      console.log("Fetching staff error:", error);
+      // console.log("Fetching staff error:", error);
       toast.error("Error fetching staff");
     }
   };
@@ -209,19 +210,24 @@ const Staffs = () => {
   ];
 
   return (
-    <div className="px-10 py-5 bg-white rounded-md shadow-md">
+    <div className="px-5 py-5 bg-white rounded-md shadow-md">
       <h2
         className="bg-orange-700 p-2 rounded-md my-4 text-white w-fit text-center cursor-pointer transition duration-300 ease-in-out hover:bg-orange-600 hover:scale-105"
         onClick={handleAddStudentClick}
       >
         Add Staff
       </h2>
-      <h1 className="text-xl mb-4">Staff List</h1>
+      {/* <h1 className="text-xl mb-4">Staff List</h1> */}
 
       {/* Add staff form */}
       {addFormVisible && (
         <div className="fixed inset-0 bg-orange-700/30 flex justify-center items-center z-50">
-          <div className=" bg-white shadow-lg p-5 rounded-md">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className=" bg-white shadow-lg p-5 rounded-md w-[80%]"
+          >
             <div
               onClick={() => setAddFormVisible(false)}
               className="flex justify-end text-2xl mb-2 cursor-pointer"
@@ -275,14 +281,19 @@ const Staffs = () => {
                 Add staff
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Edit staff form */}
       {editingStaffForm && (
         <div className="fixed inset-0 bg-orange-700/20 bg-opacity-50 flex items-center justify-center z-50 p-5">
-          <div className="bg-white rounded-lg shadow-lg max-w-lg p-6 md:p-8 ">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="bg-white rounded-lg shadow-lg max-w-lg p-6 md:p-8  w-[80%] "
+          >
             <div
               onClick={() => setEditingStaffForm(false)}
               className="flex justify-end text-2xl cursor-pointer mb-4"
@@ -341,14 +352,19 @@ const Staffs = () => {
                 Save changes <FaEdit className="ml-2" />
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Delete confirmation */}
       {deleteForm && (
         <div className="fixed inset-0 z-50 bg-orange-700/30 flex justify-center items-center">
-          <div className="my-3 p-4 bg-red-100 border border-red-300 rounded">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="my-3 p-4 bg-red-100 border border-red-300 rounded"
+          >
             <p className="text-red-700 mb-2">
               Are you sure you want to delete this staff?
             </p>
@@ -366,21 +382,28 @@ const Staffs = () => {
                 No
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Add button */}
 
       {/* DataTable */}
-      <DataTable
-        columns={columns}
-        data={allStaffs}
-        pagination
-        highlightOnHover
-        striped
-        responsive
-      />
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <DataTable
+          title="Staff"
+          columns={columns}
+          data={allStaffs}
+          pagination
+          highlightOnHover
+          striped
+          responsive
+        />
+      </motion.div>
     </div>
   );
 };

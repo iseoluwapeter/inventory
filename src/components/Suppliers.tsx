@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FaMinusCircle, FaEdit } from "react-icons/fa";
 import { MdClose, MdDelete } from "react-icons/md";
 import DataTable from "react-data-table-component";
+import { motion } from "framer-motion";
 
 type suppliers = {
   id?: number;
@@ -97,7 +98,7 @@ const Suppliers = () => {
       const { data } = await axios.get(`${apiUrl}/supplier/`);
       setSuppliers(data);
     } catch (error) {
-      console.log(error);
+      toast.error("Error fetching suppliers");
     }
   };
 
@@ -128,7 +129,8 @@ const Suppliers = () => {
       setAddModal(false);
       toast.success("Supplier successfully added!");
     } catch (error) {
-      console.log("Error trying to post", error);
+      // console.log("Error trying to post", error);
+      toast.error("Error trying to post");
     }
   };
 
@@ -173,10 +175,15 @@ const Suppliers = () => {
   ];
 
   return (
-    <div className="px-10">
+    <div className="px-3">
       {addModal && (
         <div className="fixed inset-0 z-50 flex justify-center items-center bg-orange-700/30">
-          <div className="bg-white p-5 rounded-md space-y-2">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="bg-white p-5 rounded-md space-y-2"
+          >
             <div
               onClick={() => setAddModal(false)}
               className="flex justify-end text-2xl mb-2 cursor-pointer"
@@ -240,7 +247,7 @@ const Suppliers = () => {
                 Add supplier
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -255,7 +262,12 @@ const Suppliers = () => {
 
       {deleteFormVisible && (
         <div className="fixed inset-0 z-50  bg-orange-700/30 flex justify-center items-center ">
-          <div className="my-3 p-4 bg-red-100 border border-red-300 rounded">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="my-3 p-4 bg-red-100 border border-red-300 rounded"
+          >
             <p className="text-red-700 mb-2">
               Are you sure you want to delete this staff?
             </p>
@@ -273,21 +285,26 @@ const Suppliers = () => {
                 No
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* EDITING SUPPLIER MODAL */}
       {editModal && (
-        <div className="fixed inset-0 bg-orange-700/20  bg-opacity-50 flex items-center justify-center z-50 p-5">
-          <div className="bg-white rounded-lg shadow-lg max-w-lg">
+        <div className="fixed inset-0 bg-orange-700/20  bg-opacity-50 flex items-center justify-center z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="bg-white rounded-lg shadow-lg max-w-lg"
+          >
             <div
               onClick={() => setEditModal(false)}
-              className="flex justify-end text-2xl mb-2 cursor-pointer"
+              className="flex justify-end text-2xl mb-2 cursor-pointer pe-5 pt-3 pb-0"
             >
               <MdClose className=" transition-300 ease-in-out hover:scale-110 hover:text-orange-400" />
             </div>
-            <div className=" grid grid-cols-1 md:grid-cols-2 p-6 md:p-8  gap-5 w-full text-center">
+            <div className=" grid grid-cols-1 md:grid-cols-2 px-6 py-4 md:p-8  gap-3 lg:gap-5 w-full text-center">
               {["name", "address", "email", "phone", "other_details"].map(
                 (field) => (
                   <input
@@ -307,18 +324,24 @@ const Suppliers = () => {
               )}
               <button
                 onClick={saveEditSupplier}
-                className="bg-orange-500 text-white mt-3 p-2 rounded flex justify-center"
+                className="bg-orange-500 text-white p-2 rounded flex justify-center"
               >
                 Save changes <FaEdit />
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-2">Suppliers List</h2>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="mt-5"
+      >
+        {/* <h2 className="text-lg font-semibold mb-2">Suppliers List</h2> */}
         <DataTable
+          title="Suppliers"
           columns={columns}
           data={suppliers}
           pagination
@@ -326,7 +349,7 @@ const Suppliers = () => {
           striped
           responsive
         />
-      </div>
+      </motion.div>
     </div>
   );
 };

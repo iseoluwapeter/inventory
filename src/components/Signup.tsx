@@ -18,6 +18,7 @@ const Signup = () => {
     password: "",
     role: "",
   });
+  const [isLoading, setIsLoading] = useState(false)
 
   const [roles, setRoles] = useState<
     { id: number; label: string; value: string }[]
@@ -75,6 +76,8 @@ const Signup = () => {
       return;
     }
 
+    setIsLoading(true)
+
     try {
       await axios.post(`${apiUrl}/staff/staff`, {
         firstname,
@@ -84,7 +87,7 @@ const Signup = () => {
         phone,
         username,
         password,
-        role_id: role, // assuming backend expects `role_id`
+        role_id: role, 
       });
 
       toast.success("Signup successful!");
@@ -101,6 +104,7 @@ const Signup = () => {
       title="Sign Up"
       buttonText="Sign up"
       onSubmit={handleSubmit}
+      loading={isLoading}
       fields={[
         {
           name: "firstname",

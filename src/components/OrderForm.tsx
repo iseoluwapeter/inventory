@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 type customers = {
   id: number;
@@ -21,7 +22,7 @@ const OrderForm = () => {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [quantity, setQuantity] = useState("1");
   const [unitPrice, setUnitPrice] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -50,20 +51,21 @@ const OrderForm = () => {
     getProduct();
   }, []);
 
-  useEffect(()=>{
-    setUnitPrice(products.find(product => product.id === Number(selectedProduct))?.price.toString() || "")
-  },[selectedProduct,products])
+  useEffect(() => {
+    setUnitPrice(
+      products
+        .find((product) => product.id === Number(selectedProduct))
+        ?.price.toString() || ""
+    );
+  }, [selectedProduct, products]);
 
   const placeOrder = async () => {
-    if (
-      !selectedCustomer ||
-      !selectedProduct ||
-      !quantity ||
-      !unitPrice 
-    ) {
+    if (!selectedCustomer || !selectedProduct || !quantity || !unitPrice) {
       toast.error("Please fill in all fields");
       return;
     }
+
+    setIsLoading(true);
 
     try {
       const orderRes = await axios.post(`${apiUrl}/order/order`, {
@@ -86,16 +88,21 @@ const OrderForm = () => {
       setSelectedProduct("");
       setQuantity("1");
       setUnitPrice("");
-
-      
     } catch (err) {
       console.error(err);
       toast.error("Failed to place order");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-6 space-y-6 border border-orange-100">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-6 space-y-6 border border-orange-100"
+    >
       <h2 className="text-2xl font-bold text-orange-800">🛒 Place New Order</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -167,12 +174,13 @@ const OrderForm = () => {
       </div>
 
       <button
+        disabled={isLoading}
         onClick={placeOrder}
         className="w-full bg-orange-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-orange-600 transition-all duration-300"
       >
-        Place Order
+        {isLoading ? "placing order..." : "Place order"}
       </button>
-    </div>
+    </motion.div>
   );
 };
 

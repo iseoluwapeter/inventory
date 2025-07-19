@@ -5,9 +5,11 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useStaff } from "../context/StaffContext";
 
+
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { setStaff } = useStaff();
 
@@ -19,6 +21,8 @@ const Login = () => {
       toast.error("Please fill all required fields");
       return;
     }
+
+    setIsLoading(true);
 
     const formData = new URLSearchParams();
     formData.append("username", email);
@@ -39,7 +43,7 @@ const Login = () => {
       //   toast.error("staff missing in response")
       //   return;
       // }
-      console.log("Full response from backend:", response.data);
+      // console.log("Full response from backend:", response.data);
 
       localStorage.setItem("token", access_token);
 
@@ -52,41 +56,48 @@ const Login = () => {
 
       navigate("/");
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       const backendError = error.response?.data?.detail || "Error loggin in";
       toast.error(backendError);
+    } finally {
+      setIsLoading(false);
+      setEmail("");
+      setPassword("");
     }
-    setEmail("");
-    setPassword("");
   };
 
   return (
-    <AuthForm
-      title="Login"
-      buttonText="Login"
-      onSubmit={handleLogin}
-      fields={[
-        {
-          name: "email",
-          type: "email",
-          placeholder: "Email",
-          value: email,
-          onChange: (e) => setEmail(e.target.value),
-        },
-        {
-          name: "password",
-          type: "password",
-          placeholder: "Password",
-          value: password,
-          onChange: (e) => setPassword(e.target.value),
-        },
-      ]}
-      footerText={{
-        prompt: "Don't have an account yet",
-        linkText: "Signup",
-        linkTo: "/signup",
-      }}
-    />
+    <>
+    
+
+      <AuthForm
+        title="Login"
+        buttonText="Login"
+        onSubmit={handleLogin}
+        loading={isLoading}
+        fields={[
+          {
+            name: "email",
+            type: "email",
+            placeholder: "Email",
+            value: email,
+            onChange: (e) => setEmail(e.target.value),
+          },
+          {
+            name: "password",
+            type: "password",
+            placeholder: "Password",
+            value: password,
+            onChange: (e) => setPassword(e.target.value),
+          },
+        ]}
+        footerText={{
+          prompt: "Don't have an account yet",
+          linkText: "Signup",
+          linkTo: "/signup",
+        }}
+      />
+    </>
   );
 };
 
